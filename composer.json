@@ -1,0 +1,26 @@
+{
+    "name": "saas/installer",
+    "type": "library",
+    "keywords": ["saas"],
+    "authors": [
+        {
+            "name": "Phuc dai ca",
+            "email": "phuc.ps.89@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Saas\\Installer": "src/"
+        }
+    },
+    "require": {
+        "ext-zip": "*",
+        "guzzlehttp/guzzle": "~6.0",
+        "symfony/console": "~3.0|~4.0",
+        "symfony/filesystem": "~3.0|~4.0",
+        "symfony/process": "~3.0|~4.0"
+    },
+    "bin": [
+        "saas"
+    ]
+}
