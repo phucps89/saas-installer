@@ -9,8 +9,10 @@
 namespace Saas\Installer;
 
 use GuzzleHttp\Client;
+use Saas\Installer\Utils\Functions;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use ZipArchive;
@@ -28,8 +30,23 @@ class InstallerCommand extends Command
         $this
             ->setName('install')
             ->setDescription('Create a new Saas Product Application')
-            ->addArgument('name', InputArgument::OPTIONAL);
+            ->addArgument('name', InputArgument::REQUIRED)
+            ->addArgument('path', InputArgument::OPTIONAL);
     }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $nameProject = $input->getArgument('name');
+        $dirPath = $input->getArgument('path') ?? getcwd() . DIRECTORY_SEPARATOR;
+        if(!Functions::isAbsolutePath($dirPath)){
+            $dirPath = getcwd().DIRECTORY_SEPARATOR.$dirPath.DIRECTORY_SEPARATOR;
+        }
+        $projectPath = $dirPath . $nameProject;
+        $envPath = $projectPath . DIRECTORY_SEPARATOR . '.env';
+
+        var_dump($projectPath);
+    }
+
 
     /**
      * Download the temporary Zip to the given file.
@@ -99,18 +116,5 @@ class InstallerCommand extends Command
             $output->writeln('<comment>You should verify that the "storage" and "bootstrap/cache" directories are writable.</comment>');
         }
         return $this;
-    }
-
-    /**
-     * Get the composer command for the environment.
-     *
-     * @return string
-     */
-    protected function findComposer()
-    {
-        if (file_exists(getcwd().'/composer.phar')) {
-            return '"'.PHP_BINARY.'" composer.phar';
-        }
-        return 'composer';
     }
 }
