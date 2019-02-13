@@ -20,7 +20,7 @@ With specific version
 composer global require phucps89/saas-installer:{{version}}
 ```
 
-####Bind composer binary path to system
+#### Bind composer binary path to system
 ````bash
 export PATH=~/.composer/vendor/bin:$PATH
 ````
