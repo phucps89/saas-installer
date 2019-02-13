@@ -87,10 +87,10 @@ class SetupEnvCommand extends Command
         $io->note("Installing dependencies...");
         $phpVersion = Common::getPhpVersion();
         if($this->os == 'ubuntu'){
-            system("apt-get install php{$phpVersion}-dev gcc make re2c autoconf automake");
+            system("apt-get --assume-yes install php{$phpVersion}-dev gcc make re2c autoconf automake");
         }
         else if (in_array($this->os, ['centos', 'fedora'])){
-            system("yum install php-devel gcc make re2c autoconf automake");
+            system("yum -y install php-devel gcc make re2c autoconf automake");
         }
 
 
