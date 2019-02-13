@@ -12,4 +12,5 @@ else {
 $app = new Symfony\Component\Console\Application('Saas Installer', '1.0.0');
 $app->add(new \Saas\Installer\InstallerCommand());
 $app->add(new \Saas\Installer\SetupEnvCommand());
+$app->add(new \Saas\Installer\InputLicenceCommand());
 $app->run();
