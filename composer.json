@@ -15,10 +15,13 @@
     },
     "require": {
         "ext-zip": "*",
+        "ext-posix": "*",
+        "php": "^7.0.0",
         "guzzlehttp/guzzle": "~6.0",
         "symfony/console": "~3.0|~4.0",
         "symfony/filesystem": "~3.0|~4.0",
-        "symfony/process": "~3.0|~4.0"
+        "symfony/process": "~3.0|~4.0",
+        "czproject/git-php": "^3.17"
     },
     "bin": [
         "saas"
