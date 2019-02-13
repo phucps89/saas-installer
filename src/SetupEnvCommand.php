@@ -23,6 +23,18 @@ class SetupEnvCommand extends Command
     const ZEPHIR_PARSER = 'Zephir Parser';
     const GIT_REPO_ZEPHIR_PARSER = 'https://github.com/phalcon/php-zephir-parser.git';
 
+    private $os;
+
+    /**
+     * @var InputInterface
+     */
+    private $input;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
     /**
      * Configure the command options.
      *
@@ -37,6 +49,9 @@ class SetupEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->os = Common::operating_system_detection()['id'];
+        $this->input = $input;
+        $this->output = $output;
         $helper = $this->getHelper('question');
         $arrEnv = [
             1 => self::ZEPHIR_PARSER,
@@ -47,22 +62,18 @@ class SetupEnvCommand extends Command
 
         switch ($ans){
             case self::ZEPHIR_PARSER:
-                $this->installZephirParser($input, $output);
+                $this->installZephirParser();
                 break;
         }
     }
 
-    private function installZephirParser(InputInterface $input, OutputInterface $output)
+    private function installZephirParser()
     {
-        $io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($this->input, $this->output);
         if(!Common::isRunningAsRoot()){
             $io->caution("This action must be run as Root permission!!");
             return;
         }
-
-        $phpVersion = Common::getPhpVersion();
-        system('apt-get update');
-        system("apt-get install php{$phpVersion}-dev gcc make re2c autoconf automake");
 
         $dirZephir = '/php-zephir-parser';
         if(file_exists($dirZephir)){
@@ -71,6 +82,17 @@ class SetupEnvCommand extends Command
 
         $io->note("Cloning Zephir Parser...");
         $repo = GitRepository::cloneRepository('https://github.com/phalcon/php-zephir-parser.git', $dirZephir);
+
+
+        $io->note("Installing dependencies...");
+        $phpVersion = Common::getPhpVersion();
+        if($this->os == 'ubuntu'){
+            system("apt-get install php{$phpVersion}-dev gcc make re2c autoconf automake");
+        }
+        else if (in_array($this->os, ['centos', 'fedora'])){
+            system("yum install php-devel gcc make re2c autoconf automake");
+        }
+
 
         $io->note("Installing Zephir Parser...");
         $logCurDir = getcwd();
@@ -82,6 +104,8 @@ class SetupEnvCommand extends Command
 
         chdir($logCurDir);
         Common::deleteDirectory($dirZephir);
+        $io->note("Add the extension to your php.ini!!");
+        $io->section("[Zephir Parser]\nextension=zephir_parser.so");exit;
         $io->note("Remember to restart Web server!!");
     }
 
