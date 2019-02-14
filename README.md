@@ -13,11 +13,7 @@ The Saas Installer package for the Saas Model.
 #### Install package globally
 
 ```bash
-composer global require phucps89/saas-installer:dev-master
-```
-With specific version
-```bash
-composer global require phucps89/saas-installer:{{version}}
+composer global require phucps89/saas-installer
 ```
 
 #### Bind composer binary path to system
