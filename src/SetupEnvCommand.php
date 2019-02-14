@@ -85,9 +85,11 @@ class SetupEnvCommand extends Command
         $io->note("Installing dependencies...");
         $phpVersion = Common::getPhpVersion();
         if($this->os == 'ubuntu'){
+            system("apt-get update");
             system("apt-get --assume-yes install php{$phpVersion}-dev gcc make re2c autoconf automake");
         }
         else if (in_array($this->os, ['centos', 'fedora'])){
+            system("yum update");
             system("yum -y install php-devel gcc make re2c autoconf automake");
         }
         else{
@@ -143,9 +145,11 @@ class SetupEnvCommand extends Command
         $io->note("Installing dependencies...");
         $phpVersion = Common::getPhpVersion();
         if($this->os == 'ubuntu'){
+            system("apt-get update");
             system("apt-get --assume-yes install php{$phpVersion}-dev gcc make re2c autoconf automake");
         }
         else if (in_array($this->os, ['centos', 'fedora'])){
+            system("yum update");
             system("yum -y install php-devel gcc make re2c autoconf automake");
         }
         else{
