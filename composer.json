@@ -13,6 +13,7 @@
             "Saas\\Installer\\": "src/"
         }
     },
+    "minimum-stability": "1.0.0",
     "require": {
         "ext-zip": "*",
         "ext-posix": "*",
