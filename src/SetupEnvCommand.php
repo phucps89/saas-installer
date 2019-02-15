@@ -225,6 +225,12 @@ class SetupEnvCommand extends Command
             }
         }
 
+        $result = exec('command -v java >/dev/null && echo "yes" || echo "no"');
+        if($result == 'no'){
+            $io->caution("Please install java before!!");
+            return;
+        }
+
         $envSelection = [
             1 => self::ENV_DEVELOP,
             2 => self::ENV_DELIVERY,
