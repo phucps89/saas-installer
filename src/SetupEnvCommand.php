@@ -21,6 +21,7 @@ class SetupEnvCommand extends Command
 {
     const SAAS_EXTENSION = 'Saas Extension';
     const ZEPHIR_PARSER = 'Zephir Parser';
+    const SAAS_MODEL_HOME = 'Saas Model Home';
     const GIT_REPO_ZEPHIR_PARSER = 'https://github.com/phalcon/php-zephir-parser.git';
     const ENV_DEVELOP = 'develop';
     const ENV_DELIVERY = 'delivery';
@@ -60,6 +61,7 @@ class SetupEnvCommand extends Command
         $arrEnv = [
             1 => self::ZEPHIR_PARSER,
             2 => self::SAAS_EXTENSION,
+            3 => self::SAAS_MODEL_HOME,
         ];
         $question = new ChoiceQuestion('Select package:', $arrEnv);
         $ans = $helper->ask($input, $output, $question);
@@ -70,6 +72,9 @@ class SetupEnvCommand extends Command
                 break;
             case self::SAAS_EXTENSION:
                 $this->installSaasExtension();
+                break;
+            case self::SAAS_MODEL_HOME:
+                $this->installSaasModelHome();
                 break;
         }
     }
@@ -178,6 +183,21 @@ class SetupEnvCommand extends Command
         $io->note("Add the extension to your php.ini!!");
         $io->section("[Saas Extension]\nextension=saas.so");exit;
         $io->note("Remember to restart Web server!!");
+    }
+
+    private function installSaasModelHome()
+    {
+        $io = new SymfonyStyle($this->input, $this->output);
+        if(!Common::isRunningAsRoot()){
+            $io->caution("This action must be run as Root permission!!");
+            return;
+        }
+
+        $pathSM = '/usr/local/sm';
+        if(!file_exists($pathSM)){
+            mkdir($pathSM);
+        }
+        chmod($pathSM, 0777);
     }
 
 
