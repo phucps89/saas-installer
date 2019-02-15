@@ -1,0 +1,7 @@
+[program:saas]
+command=java -jar /usr/local/sm/saas.jar
+redirect_stderr=true
+autostart=true
+autorestart=true
+stdout_logfile=/usr/local/sm/saas_service.log
+exitcodes=0
