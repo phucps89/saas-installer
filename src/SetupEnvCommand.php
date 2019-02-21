@@ -269,7 +269,7 @@ class SetupEnvCommand extends Command
         chdir('/etc/supervisor/conf.d');
         $configSupervisor = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'saas_supervisor');
         system("echo '{$configSupervisor}' > saas.conf");
-        system('supervisorctl reload');
+        system('supervisorctl update saas');
 //        system('supervisorctl update');
 
         chdir($logCurDir);

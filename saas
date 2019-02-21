@@ -9,7 +9,7 @@ else if (file_exists(__DIR__.'/../../../vendor/autoload.php')){
 else {
     require __DIR__.'/vendor/autoload.php';
 }
-$app = new Symfony\Component\Console\Application('Saas Installer', '1.1.1');
+$app = new Symfony\Component\Console\Application('Saas Installer', '1.1.2');
 $app->add(new \Saas\Installer\InstallerCommand());
 $app->add(new \Saas\Installer\SetupEnvCommand());
 $app->add(new \Saas\Installer\InputLicenceCommand());
