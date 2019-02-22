@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class SetupEnvCommand extends Command
@@ -190,7 +191,6 @@ class SetupEnvCommand extends Command
         $io->newLine();
         $io->note("Add the extension to your php.ini!!");
         $io->section("[Saas Extension]\nextension=saas.so");
-        exit;
         $io->note("Remember to restart Web server!!");
     }
 
@@ -205,8 +205,76 @@ class SetupEnvCommand extends Command
         if (!file_exists(self::SM_HOME_PATH)) {
             mkdir(self::SM_HOME_PATH);
         }
-        chmod(self::SM_HOME_PATH, 0777);
+
+        $helper = $this->getHelper('question');
+        do{
+            $question = new Question('Which system user do you want to run SAAS?');
+            $ans = $helper->ask($this->input, $this->output, $question);
+
+        }while(empty($ans) || !chown(self::SM_HOME_PATH, $ans));
+        $this->chmod_r(self::SM_HOME_PATH, 0755, 0755);
+        $this->chown_r(self::SM_HOME_PATH, $ans);
     }
+
+    /**
+     * Changes permissions on files and directories within $dir and dives recursively
+     * into found subdirectories.
+     * @param $dir
+     * @param $dirPermissions
+     * @param $filePermissions
+     */
+    function chmod_r($dir, $dirPermissions, $filePermissions)
+    {
+        $dp = opendir($dir);
+        while ($file = readdir($dp)) {
+            if (($file == ".") || ($file == ".."))
+                continue;
+
+            $fullPath = $dir . DIRECTORY_SEPARATOR . $file;
+
+            if (is_dir($fullPath)) {
+                echo('DIR:' . $fullPath . " - $dirPermissions\n");
+                chmod($fullPath, $dirPermissions);
+                $this->chmod_r($fullPath, $dirPermissions, $filePermissions);
+            }
+            else {
+                echo('FILE:' . $fullPath . " - $filePermissions\n");
+                chmod($fullPath, $filePermissions);
+            }
+
+        }
+        closedir($dp);
+    }
+
+    /**
+     * Changes permissions on files and directories within $dir and dives recursively
+     * into found subdirectories.
+     * @param $dir
+     * @param $user
+     */
+    function chown_r($dir, $user)
+    {
+        $dp = opendir($dir);
+        while ($file = readdir($dp)) {
+            if (($file == ".") || ($file == ".."))
+                continue;
+
+            $fullPath = $dir . DIRECTORY_SEPARATOR . $file;
+
+            if (is_dir($fullPath)) {
+                echo('DIR:' . $fullPath . "\n");
+                chown($fullPath, $user);
+                $this->chown_r($fullPath, $user);
+            }
+            else {
+                echo('FILE:' . $fullPath . "\n");
+                chown($fullPath, $user);
+            }
+
+        }
+        closedir($dp);
+    }
+
 
     private function installSassService()
     {
