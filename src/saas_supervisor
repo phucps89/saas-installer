@@ -1,7 +1,7 @@
 [program:saas]
 directory=/usr/local/sm/
 command=java -jar saas.jar
-username=www-data
+user=:username
 redirect_stderr=true
 autostart=true
 autorestart=true

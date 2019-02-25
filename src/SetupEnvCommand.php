@@ -333,15 +333,24 @@ class SetupEnvCommand extends Command
         chdir(self::SM_HOME_PATH);
         system("wget -q https://s3.amazonaws.com/seldat-dev-public/saas/ext/develop/saas.jar -O saas.jar");
 
+        $saasServiceFile = self::SM_HOME_PATH . DIRECTORY_SEPARATOR . 'saas.jar';
+        do{
+            $question = new Question('Which system user do you want to run SAAS Service?');
+            $ans = $helper->ask($this->input, $this->output, $question);
+
+        }while(empty($ans) || !chown($saasServiceFile, $ans));
+
         $io->note("Installing Saas Service...");
         chdir('/etc/supervisor/conf.d');
         $configSupervisor = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'saas_supervisor');
+        $configSupervisor = str_replace(':username', $ans, $configSupervisor);
         system("echo '{$configSupervisor}' > saas.conf");
         system('supervisorctl update saas');
         system('supervisorctl restart saas');
 //        system('supervisorctl update');
 
         chdir($logCurDir);
+
         $io->success("DONE");
     }
 
