@@ -151,7 +151,7 @@ class SetupEnvCommand extends Command
         $question = new ChoiceQuestion('Select environment:', $envSelection);
         $ans = $helper->ask($this->input, $this->output, $question);
 
-        if (in_array($ans, [self::ENV_PRODUCTION, self::ENV_DELIVERY])) {
+        if (in_array($ans, [self::ENV_PRODUCTION])) {
             $io->warning('Comming soon');
             return;
         }
@@ -176,7 +176,15 @@ class SetupEnvCommand extends Command
         if (file_exists($dirSaasExt)) {
             Common::deleteDirectory($dirSaasExt);
         }
-        $repo = GitRepository::cloneRepository(self::GIT_REPO_SAAS_EXTENSION, $dirSaasExt);
+
+        if($ans == self::ENV_DEVELOP){
+            $repo = GitRepository::cloneRepository(self::GIT_REPO_SAAS_EXTENSION, $dirSaasExt);
+        }
+        else if($ans == self::ENV_DELIVERY){
+            $repo = GitRepository::cloneRepository(self::GIT_REPO_SAAS_EXTENSION, $dirSaasExt, [
+                '-b' => 'delivery'
+            ]);
+        }
 
         $io->note("Installing Saas extension...");
         $logCurDir = getcwd();
@@ -308,7 +316,7 @@ class SetupEnvCommand extends Command
         $question = new ChoiceQuestion('Select environment:', $envSelection);
         $ans = $helper->ask($this->input, $this->output, $question);
 
-        if (in_array($ans, [self::ENV_PRODUCTION, self::ENV_DELIVERY])) {
+        if (in_array($ans, [self::ENV_PRODUCTION])) {
             $io->warning('Comming soon');
             return;
         }
@@ -331,7 +339,13 @@ class SetupEnvCommand extends Command
 
         $io->note("Download Saas Service...");
         chdir(self::SM_HOME_PATH);
-        system("wget -q https://s3.amazonaws.com/seldat-dev-public/saas/ext/develop/saas.jar -O saas.jar");
+
+        if($ans == self::ENV_DEVELOP){
+            system("wget -q https://s3.amazonaws.com/seldat-dev-public/saas/ext/develop/saas.jar -O saas.jar");
+        }
+        else if($ans == self::ENV_DELIVERY){
+            system("wget -q https://s3.amazonaws.com/seldat-dev-public/saas/ext/staging/saas.jar -O saas.jar");
+        }
 
         $saasServiceFile = self::SM_HOME_PATH . DIRECTORY_SEPARATOR . 'saas.jar';
         do{
