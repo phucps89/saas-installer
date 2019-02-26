@@ -9,6 +9,7 @@ The Saas Installer package for the Saas Model.
 * Ext Zip
 * Ext Posix
 * Running as Root
+* Java
 
 #### Install package globally
 
