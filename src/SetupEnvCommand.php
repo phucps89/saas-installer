@@ -151,11 +151,6 @@ class SetupEnvCommand extends Command
         $question = new ChoiceQuestion('Select environment:', $envSelection);
         $ans = $helper->ask($this->input, $this->output, $question);
 
-        if (in_array($ans, [self::ENV_PRODUCTION])) {
-            $io->warning('Comming soon');
-            return;
-        }
-
         $io->note("Installing dependencies...");
         $phpVersion = Common::getPhpVersion();
         if ($this->os == 'ubuntu') {
@@ -183,6 +178,11 @@ class SetupEnvCommand extends Command
         else if($ans == self::ENV_DELIVERY){
             $repo = GitRepository::cloneRepository(self::GIT_REPO_SAAS_EXTENSION, $dirSaasExt, [
                 '-b' => 'delivery'
+            ]);
+        }
+        else if($ans == self::ENV_PRODUCTION){
+            $repo = GitRepository::cloneRepository(self::GIT_REPO_SAAS_EXTENSION, $dirSaasExt, [
+                '-b' => 'production'
             ]);
         }
 
@@ -316,11 +316,6 @@ class SetupEnvCommand extends Command
         $question = new ChoiceQuestion('Select environment:', $envSelection);
         $ans = $helper->ask($this->input, $this->output, $question);
 
-        if (in_array($ans, [self::ENV_PRODUCTION])) {
-            $io->warning('Comming soon');
-            return;
-        }
-
         $io->note("Installing dependencies...");
         if ($this->os == 'ubuntu') {
             system("apt-get update");
@@ -345,6 +340,9 @@ class SetupEnvCommand extends Command
         }
         else if($ans == self::ENV_DELIVERY){
             system("wget -q https://s3.amazonaws.com/seldat-dev-public/saas/ext/staging/saas.jar -O saas.jar");
+        }
+        else if($ans == self::ENV_PRODUCTION){
+            system("wget -q https://s3.amazonaws.com/seldat-dev-public/saas/ext/production/saas.jar -O saas.jar");
         }
 
         $saasServiceFile = self::SM_HOME_PATH . DIRECTORY_SEPARATOR . 'saas.jar';
