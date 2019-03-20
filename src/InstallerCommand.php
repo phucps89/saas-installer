@@ -36,15 +36,15 @@ class InstallerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $nameProject = $input->getArgument('name');
-        $dirPath = $input->getArgument('path') ?? getcwd() . DIRECTORY_SEPARATOR;
-        if(!Functions::isAbsolutePath($dirPath)){
-            $dirPath = getcwd().DIRECTORY_SEPARATOR.$dirPath.DIRECTORY_SEPARATOR;
-        }
-        $projectPath = $dirPath . $nameProject;
-        $envPath = $projectPath . DIRECTORY_SEPARATOR . '.env';
-
-        var_dump($projectPath);
+//        $nameProject = $input->getArgument('name');
+//        $dirPath = $input->getArgument('path') ?? getcwd() . DIRECTORY_SEPARATOR;
+//        if(!Functions::isAbsolutePath($dirPath)){
+//            $dirPath = getcwd().DIRECTORY_SEPARATOR.$dirPath.DIRECTORY_SEPARATOR;
+//        }
+//        $projectPath = $dirPath . $nameProject;
+//        $envPath = $projectPath . DIRECTORY_SEPARATOR . '.env';
+//
+//        var_dump($projectPath);
     }
 
 
